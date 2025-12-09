@@ -2,12 +2,12 @@ module github.com/basebytes/helper/db
 
 require (
 	github.com/basebytes/component/database v0.0.2
-	github.com/basebytes/types v0.0.7
 	github.com/gin-gonic/gin v1.8.1
 	gorm.io/gorm v1.25.5
 )
 
 require (
+	github.com/basebytes/types v0.0.7 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/glebarez/go-sqlite v1.21.2 // indirect
