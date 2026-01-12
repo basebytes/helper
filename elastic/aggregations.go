@@ -3,6 +3,7 @@ package elastic
 import (
 	"github.com/basebytes/elastic-go/service/constructor"
 	"github.com/basebytes/elastic-go/service/constructor/aggregations"
+	"github.com/basebytes/elastic/fields"
 	"github.com/basebytes/elastic/index"
 )
 
@@ -23,7 +24,7 @@ func AggSelector(path map[string]string, script any) map[string]any {
 	return AggsBuilder().Pipeline.Selector(path, script)
 }
 
-func DateHistogramAgg(index index.Index, field index.Field, fixed bool, agg map[string]any) map[string]any {
+func DateHistogramAgg(index index.Index, field fields.Field, fixed bool, agg map[string]any) map[string]any {
 	date := AggsBuilder().Bucket.DateHistogram
 	params := make([]func(*aggregations.DateHistogramParam), 0, 3)
 	if fixed {
@@ -38,7 +39,7 @@ func DateHistogramAgg(index index.Index, field index.Field, fixed bool, agg map[
 	return date(index.QueryField(field.Name()), params[0], params[1:]...)
 }
 
-func DistinctAgg(index index.Index, field index.Field) map[string]any {
+func DistinctAgg(index index.Index, field fields.Field) map[string]any {
 	cardinality := AggsBuilder().Metrics.Cardinality
 	return cardinality(index.QueryField(field.Name()), cardinality.WithMissingValue(field.Missing()))
 }
@@ -66,7 +67,7 @@ func FiltersAgg(filters []func(*aggregations.FiltersParam), otherBucketKey strin
 	}
 }
 
-func HistogramAgg(index index.Index, field index.Field, agg map[string]any) map[string]any {
+func HistogramAgg(index index.Index, field fields.Field, agg map[string]any) map[string]any {
 	histogram := AggsBuilder().Bucket.Histogram
 	return histogram(index.QueryField(field.Name()), field.DataInterval(), histogram.WithChildAgg(agg))
 }
@@ -82,7 +83,7 @@ func NestedAgg(name string, agg map[string]any) map[string]any {
 	return nested(name, nested.WithChildAgg(agg))
 }
 
-func RangeAgg(index index.Index, field index.Field, rangeParams []func(param *aggregations.RangeParam), agg map[string]any) map[string]any {
+func RangeAgg(index index.Index, field fields.Field, rangeParams []func(param *aggregations.RangeParam), agg map[string]any) map[string]any {
 	rangeAgg := AggsBuilder().Bucket.Range
 	rangeParams = append(rangeParams, rangeAgg.WithChildAgg(agg))
 	return rangeAgg(index.QueryField(field.Name()), rangeParams[0], rangeParams[1:]...)
@@ -97,7 +98,7 @@ func ReverseNestedAgg(path string, agg map[string]any) map[string]any {
 	return reverse(reverse.WithPath(path), reverse.WithChildAgg(agg))
 }
 
-func SumAgg(index index.Index, field index.Field) map[string]any {
+func SumAgg(index index.Index, field fields.Field) map[string]any {
 	sum := AggsBuilder().Metrics.Sum
 	return sum(index.QueryField(field.Name()), sum.WithMissingValue(field.Missing()))
 }
@@ -106,7 +107,7 @@ func SumBucketAgg(path string) map[string]any {
 	return AggsBuilder().Pipeline.SumBucket(path)
 }
 
-func TermsAgg(index index.Index, field index.Field, agg map[string]any) map[string]any {
+func TermsAgg(index index.Index, field fields.Field, agg map[string]any) map[string]any {
 	terms := AggsBuilder().Bucket.Terms
 	params := make([]func(param *aggregations.TermsParam), 0, 4)
 	params = append(params, terms.WithChildAgg(agg), terms.WithSize(index.FieldTermSize(field.Name())), terms.WithMissingValue(field.Missing()))
@@ -116,7 +117,7 @@ func TermsAgg(index index.Index, field index.Field, agg map[string]any) map[stri
 	return terms(index.QueryField(field.Name()), params...)
 }
 
-func ValueCountAgg(index index.Index, field index.Field) map[string]any {
+func ValueCountAgg(index index.Index, field fields.Field) map[string]any {
 	return AggsBuilder().Metrics.ValueCount(index.QueryField(field.Name()))
 }
 

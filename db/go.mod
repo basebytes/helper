@@ -1,7 +1,7 @@
 module github.com/basebytes/helper/db
 
 require (
-	github.com/basebytes/component/database v0.0.2
+	github.com/basebytes/component/database v0.0.3
 	github.com/gin-gonic/gin v1.8.1
 	gorm.io/gorm v1.25.5
 )

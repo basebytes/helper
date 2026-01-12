@@ -51,6 +51,10 @@ func UpdateColumnsById(name string, table rdb.Data, columns ...string) error {
 	return conn(name).UpdateColumnsById(table, columns...).Error
 }
 
+func BatchUpdatesNotEmpty(name string, tables []rdb.Data) (err error) {
+	return conn(name).BatchUpdatesNotEmpty(tables)
+}
+
 func PageQuery(name string, table rdb.Data, result any, page rdb.Condition, conditions ...rdb.Condition) (int64, error) {
 	return conn(name).PageQuery(table, result, page, conditions...)
 }
